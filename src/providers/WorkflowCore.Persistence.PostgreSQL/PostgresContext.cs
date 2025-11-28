@@ -12,9 +12,9 @@ namespace WorkflowCore.Persistence.PostgreSQL
         private readonly string _connectionString;
         private readonly string _schemaName;
 
-        public PostgresContext(string connectionString,string schemaName)
-            :base()
-        {   
+        public PostgresContext(string connectionString, string schemaName)
+            : base()
+        {
             _connectionString = connectionString;
             _schemaName = schemaName;
         }
@@ -22,7 +22,10 @@ namespace WorkflowCore.Persistence.PostgreSQL
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseNpgsql(_connectionString);
+            optionsBuilder.UseNpgsql(_connectionString, options =>
+            {
+                options.MigrationsHistoryTable("__EFMigrationsHistory", _schemaName);
+            });
         }
 
         protected override void ConfigureSubscriptionStorage(EntityTypeBuilder<PersistedSubscription> builder)
@@ -36,7 +39,7 @@ namespace WorkflowCore.Persistence.PostgreSQL
             builder.ToTable("Workflow", _schemaName);
             builder.Property(x => x.PersistenceId).ValueGeneratedOnAdd();
         }
-                
+
         protected override void ConfigureExecutionPointerStorage(EntityTypeBuilder<PersistedExecutionPointer> builder)
         {
             builder.ToTable("ExecutionPointer", _schemaName);

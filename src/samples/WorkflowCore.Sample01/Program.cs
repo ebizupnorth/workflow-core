@@ -31,6 +31,8 @@ namespace WorkflowCore.Sample01
             services.AddLogging();
             services.AddWorkflow();
             //services.AddWorkflow(x => x.UseMongoDB(@"mongodb://localhost:27017", "workflow"));
+            //services.AddWorkflow(x => x.UsePostgreSQL("Server=localhost;Database=workflow;Port=5432;User Id=;Password=;", true, true));
+
             services.AddTransient<GoodbyeWorld>();
             
             var serviceProvider = services.BuildServiceProvider();
